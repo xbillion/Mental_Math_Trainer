@@ -4,26 +4,95 @@
       <meta charset="UTF-8">
       <title>Mental Math Trainer</title>
       <style>
-         #left_menu{padding-left:0;list-style-type:none;}
-         #left_menu li{background:#fff;font-size:15pt;color:#000;padding:6px 5px;cursor:pointer;border-radius:3px;border-bottom:1px solid #fff;}
-         #left_menu li:hover{border-bottom:1px solid #eee;}
-         .tips{font-size:11pt;color:#999;line-height:14pt;}
-         .digits{font-size:15pt;width:40px;border-radius:5px;padding: 10px 12px;border:1px solid #ccc;}
-         button{color:#fff;border-radius:5px;cursor:pointer;border:0;font-size:15pt;
-         background:#228B22;padding: 10px 12px;}
-         button:hover{opacity:0.9;}
-         #right_div{font-size:19pt;}
-         #answer{margin:20px 0;padding:20px 30px 14px 30px;border:1px solid #ccc;border-radius:5px;}
-         .next_task{margin-top:10px;}
-         #task{}
-         #saved{height:100%;width:100%;left:0;top:0;overflow:hidden;position: fixed;overflow:hidden;background:#fff;}
-         #saved h1{text-align:center;margin:0;position:absolute;top:30%;left:40%;}
+         #main {
+              width:720px;
+              margin:100px auto 0 auto;
+              position: relative;
+         }
+         #left {
+             width:150px;
+             float:left;
+         }
+         #left_menu{
+              padding-left:0;
+              list-style-type:none;
+         }
+         #left_menu li{
+              background:#fff;
+              font-size:15pt;
+              color:#000;
+              padding:6px 5px;
+              cursor:pointer;
+              border-radius:3px;
+              border-bottom:1px solid #fff;
+         }
+         #left_menu li:hover{
+              border-bottom:1px solid #eee;
+         }
+         .tips{
+              font-size:11pt;
+              color:#999;
+              line-height:14pt;
+         }
+         .digits{
+              font-size:15pt;
+              width:40px;
+              border-radius:5px;
+              padding: 10px 12px;
+              border:1px solid #ccc;
+         }
+         button{
+              color:#fff;
+              border-radius:5px;
+              cursor:pointer;
+              border:0;
+              font-size:15pt;
+              background:#228B22;
+              padding: 10px 12px;
+         }
+         button:hover{
+              opacity:0.9;
+         }
+         #right_div{
+              width:540px;
+             min-height:400px;
+             float:right;
+              font-size:19pt;
+         }
+         #answer{
+              margin:20px 0;
+              padding:20px 30px 14px 30px;
+              border:1px solid #ccc;
+              border-radius:5px;
+         }
+         .next_task{
+              margin-top:10px;
+         }
+         #task{
+         }
+         #saved{
+              height:100%;
+              width:100%;
+              left:0;
+              top:0;
+              overflow:hidden;
+              position: fixed;
+              overflow:hidden;
+              background:#fff;
+         }
+         #saved h1{
+              text-align:center;
+              margin:0;
+              position:absolute;
+              top:30%;
+              left:40%;
+         }
       </style>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
    </head>
    <body>
-      <div style="width:720px;margin:100px auto 0 auto;position: relative;">
-         <div style="width:150px;float:left;">
+      <div id="main">
+         <div id="left">
             <ul id="left_menu">
                <li class="button stack" data-mode="r">Random</li>
                <li class="button stack" data-mode="d">Division</li>
@@ -37,7 +106,7 @@
                <div>Enter: next task</div>
             </div>
          </div>
-         <div id="right_div" style="width:540px;min-height:400px;float:right;">
+         <div id="right_div">
             <div id="task_box">
                <h1 id="task"></h1>
                <h1 id="answer" style="display:none;"><span id="answer_text"></span></h1>

@@ -1,238 +1,316 @@
 <!DOCTYPE html>
 <html>
-   <head>
-      <meta charset="UTF-8">
-      <title>Mental Math Trainer</title>
-      <style>
-         #main {
-              width:720px;
-              margin:100px auto 0 auto;
-              position: relative;
-         }
-         #left {
-             width:150px;
-             float:left;
-         }
-         #left_menu{
-              padding-left:0;
-              list-style-type:none;
-         }
-         #left_menu li{
-              background:#fff;
-              font-size:15pt;
-              color:#000;
-              padding:6px 5px;
-              cursor:pointer;
-              border-radius:3px;
-              border-bottom:1px solid #fff;
-         }
-         #left_menu li:hover{
-              border-bottom:1px solid #eee;
-         }
-         .tips{
-              font-size:11pt;
-              color:#999;
-              line-height:14pt;
-         }
-         .digits{
-              font-size:15pt;
-              width:40px;
-              border-radius:5px;
-              padding: 10px 12px;
-              border:1px solid #ccc;
-         }
-         button{
-              color:#fff;
-              border-radius:5px;
-              cursor:pointer;
-              border:0;
-              font-size:15pt;
-              background:#228B22;
-              padding: 10px 12px;
-         }
-         button:hover{
-              opacity:0.9;
-         }
-         #right_div{
-              width:540px;
-             min-height:400px;
-             float:right;
-              font-size:19pt;
-         }
-         #answer{
-              margin:20px 0;
-              padding:20px 30px 14px 30px;
-              border:1px solid #ccc;
-              border-radius:5px;
-         }
-         .next_task{
-              margin-top:10px;
-         }
-         #task{
-         }
-         #saved{
-              height:100%;
-              width:100%;
-              left:0;
-              top:0;
-              overflow:hidden;
-              position: fixed;
-              overflow:hidden;
-              background:#fff;
-         }
-         #saved h1{
-              text-align:center;
-              margin:0;
-              position:absolute;
-              top:30%;
-              left:40%;
-         }
-      </style>
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-   </head>
-   <body>
-      <div id="main">
-         <div id="left">
-            <ul id="left_menu">
-               <li class="button stack" data-mode="r">Random</li>
-               <li class="button stack" data-mode="d">Division</li>
-               <li class="button stack" data-mode="m">Multiplication</li>
-               <li class="button stack" data-mode="a">Addition</li>
-               <li class="button stack" data-mode="s">Subtraction</li>
-               <li class="button stack settings">Settings</li>
-            </ul>
-            <div class="tips">
-               <div>Space/Click: answer</div>
-               <div>Enter: next task</div>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Mental Math Trainer</title>
+        <style>
+            #main {
+                width: 720px;
+                margin: 100px auto 0 auto;
+                position: relative;
+            }
+            #left {
+                width: 150px;
+                float: left;
+            }
+            #left_menu {
+                padding-left: 0;
+                list-style-type: none;
+            }
+            #left_menu li {
+                background: #fff;
+                font-size: 1.2em;
+                color: #000;
+                padding: 6px 5px;
+                cursor: pointer;
+                border-radius: 3px;
+                border-bottom: 1px solid #fff;
+            }
+            #left_menu li:hover {
+                border-bottom: 1px solid #eee;
+            }
+            .tips {
+                font-size: 0.9em;
+                color: #999;
+                line-height: 1.3em;
+            }
+            #settings_box td {
+                padding: 5px 10px;
+            }
+            #settings_box input {
+                font-size: 0.9em;
+                border-radius: 5px;
+                padding: 10px 12px;
+                border: 1px solid #ccc;
+                width: 100px;
+            }
+            #settings_box button {
+                color: #fff;
+                border-radius: 5px;
+                cursor: pointer;
+                border: 0;
+                font-size: 0.9em;
+                background: #228b22;
+                padding: 10px 20px;
+            }
+            #settings_box button:hover {
+                opacity: 0.9;
+            }
+            #right_div {
+                width: 540px;
+                min-height: 400px;
+                float: right;
+            }
+            #task {
+                font-size: 3em;
+            }
+            #answer {
+                margin: 20px 0;
+                padding: 22px 30px 16px 30px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+            }
+            #answer_text {
+                font-size: 2.4em;
+                padding: 5px;
+                margin: 5px;
+            }
+            #answer_correct {
+            }
+            #answer_correct {
+                color: #fff;
+                border-radius: 5px;
+                cursor: pointer;
+                border: 0;
+                font-size: 0.6em;
+                background: #228b22;
+                padding: 6px 16px;
+                font-size: 1.2em;
+                margin: 0 0 15px 0;
+            }
+            #answer_correct:hover {
+                opacity: 0.9;
+            }
+            #progress {
+            }
+            #progress button {
+                color: #bbb;
+                border-radius: 5px;
+                background: #fff;
+                border: 1px solid #ddd;
+                font-size: 1em;
+                margin: 4px 3px;
+                width: 45px;
+                height: 30px;
+            }
+            .next_task {
+                margin-top: 10px;
+            }
+            #saved {
+                height: 100%;
+                width: 100%;
+                left: 0;
+                top: 0;
+                overflow: hidden;
+                position: fixed;
+                overflow: hidden;
+                background: #fff;
+            }
+            #saved h1 {
+                text-align: center;
+                margin: 0;
+                position: absolute;
+                top: 30%;
+                left: 40%;
+            }
+        </style>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    </head>
+    <body>
+        <div id="goal_css"></div>
+        <div id="main">
+            <div id="left">
+                <ul id="left_menu">
+                    <li class="button stack" data-mode="r">Random</li>
+                    <li class="button stack" data-mode="d">Division</li>
+                    <li class="button stack" data-mode="m">Multiplication</li>
+                    <li class="button stack" data-mode="a">Addition</li>
+                    <li class="button stack" data-mode="s">Subtraction</li>
+                    <li class="button stack settings">Settings</li>
+                </ul>
+                <div class="tips">
+                    <div>Space/Click: answer</div>
+                    <div>Enter: +1 correct</div>
+                </div>
             </div>
-         </div>
-         <div id="right_div">
-            <div id="task_box">
-               <h1 id="task"></h1>
-               <h1 id="answer" style="display:none;"><span id="answer_text"></span></h1>
+            <div id="right_div">
+                <div id="task_box">
+                    <h1 id="task"></h1>
+                    <div style="height: 200px;">
+                        <div id="answer" style="display: none;">
+                            <h1 id="answer_text"></h1>
+                            <div id="result"><button type="text" id="answer_correct">Correct</button></div>
+                        </div>
+                    </div>
+
+                    <div id="progress"></div>
+                </div>
+                <div id="settings_box" style="display: none;">
+                    <h1>Settings</h1>
+                    <table>
+                        <tr>
+                            <td>Digits:</td>
+                            <td><input type="text" class="digits" /></td>
+                        </tr>
+                        <tr>
+                            <td>Goal:</td>
+                            <td><input type="text" class="goal" /></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td><button type="text" id="settings_save">Save</button></td>
+                        </tr>
+                    </table>
+                </div>
             </div>
-            <div id="settings_box" style="display:none;">
-               <h1>Settings</h1>
-               Digits: <input type="text" class="digits"> <button type="text" id="save_digits">Save</button>
-            </div>
-         </div>
-      </div>
-      <script>
-         $(document).ready(
-             function() {
-         
-         		function getRandomInt(min, max) {
-         		    min = Math.ceil(min);
-         		    max = Math.floor(max);
-         		    return Math.floor(Math.random() * (max - min + 1)) + min;
-         		}
-         		var position = 1
-         		var mode = 'm'
-         		var local_s_digits = localStorage.getItem("digits");
-         		if (local_s_digits == null) {
-         			var digits = 2
-         		} else {
-         			var digits = local_s_digits
-         		}
-         
-         		$('.digits').val(digits)
-         		
-         		function genNewTask() {
-         
-         			var n1 = getRandomInt(parseInt('1'+'0'.repeat(digits-1)),parseInt('9'.repeat(digits)));
-         			var n2 = getRandomInt(parseInt('1'+'0'.repeat(digits-1)),parseInt('9'.repeat(digits)));
-         			var answer = 0
-         			if ( mode == 'r' ) {
-         				var action = getRandomInt(1,4);
-         			} else if ( mode == 'd' ) {
-         				var action = 1;
-         			} else if ( mode == 'm' ) {
-         				var action = 2;
-         			} else if ( mode == 'a' ) {
-         				var action = 3;
-         			} else if ( mode == 's' ) {
-         				var action = 4;
-         			}
-         			
-         			if (action == 1) {
-         				action = '&#247;'
-         				answer = n1/n2
-         			} else if (action == 2) {
-         				action = '&#215;'
-         				answer = n1*n2
-         			} else if (action == 3) {
-         				action = '&#43;'
-         				answer = n1+n2
-         			} else if (action == 4) {
-         				action = '&#8722;'
-         				answer = n1-n2
-         			}
-         			$("#task").html(n1+' '+action+' '+n2);
-         			$("#answer_text").text(answer);
-         		}
-         
-         		genNewTask();
-         		/*
-                 $(".show_answer").mouseover(function() {
-                     $("#answer").show();
-                 });
-                 $(".next_task").mouseover(function () {
-                 	$("#answer").hide();
-                 	genNewTask();
-                 });
-                 */
-                 $('#left_menu').on('click','li',function() {
-                     mode = $(this).data("mode");
-                     if (mode != undefined) {
-                        position = 1
-         				$("#settings_box").hide();
+        </div>
+        <script>
+            $(document).ready(function () {
+                function getRandomInt(min, max) {
+                    min = Math.ceil(min);
+                    max = Math.floor(max);
+                    return Math.floor(Math.random() * (max - min + 1)) + min;
+                }
+                var position = 1;
+                var mode = "m";
+                var local_s_digits = localStorage.getItem("digits");
+                if (local_s_digits == null) {
+                    var digits = 2;
+                } else {
+                    var digits = local_s_digits;
+                }
+
+                $(".digits").val(digits);
+
+                var local_s_goal = localStorage.getItem("goal");
+                if (local_s_goal == null) {
+                    var goal = 20;
+                } else {
+                    var goal = local_s_goal;
+                }
+
+                $(".goal").val(goal);
+
+                let correct_answers_count = 0;
+
+                function genNewTask() {
+                    var n1 = getRandomInt(parseInt("1" + "0".repeat(digits - 1)), parseInt("9".repeat(digits)));
+                    var n2 = getRandomInt(parseInt("1" + "0".repeat(digits - 1)), parseInt("9".repeat(digits)));
+                    var answer = 0;
+                    if (mode == "r") {
+                        var action = getRandomInt(1, 4);
+                    } else if (mode == "d") {
+                        var action = 1;
+                    } else if (mode == "m") {
+                        var action = 2;
+                    } else if (mode == "a") {
+                        var action = 3;
+                    } else if (mode == "s") {
+                        var action = 4;
+                    }
+
+                    if (action == 1) {
+                        action = "&#247;";
+                        answer = n1 / n2;
+                    } else if (action == 2) {
+                        action = "&#215;";
+                        answer = n1 * n2;
+                    } else if (action == 3) {
+                        action = "&#43;";
+                        answer = n1 + n2;
+                    } else if (action == 4) {
+                        action = "&#8722;";
+                        answer = n1 - n2;
+                    }
+                    $("#task").html(n1 + " " + action + " " + n2);
+                    $("#answer_text").text(answer);
+                }
+
+                genNewTask();
+
+                $("#left_menu").on("click", "li", function () {
+                    mode = $(this).data("mode");
+                    if (mode != undefined) {
+                        position = 1;
+                        $("#settings_box").hide();
                         $("#answer").hide();
-         				$("#task_box").show();
-                     }
-                     genNewTask();
-                 });
-         
-                 function answer_and_next() {
-         	       if (position == 1) {
-         	       	position = 2
-         	       	$("#answer").show();
-         	       } else {
-         	       	position = 1
-         	       	$("#answer").hide();
-             		genNewTask();
-         	       }
-                 }
-         
-         		$(window).keypress(function (e) {
-         		  if (e.key === ' ' || e.key === 'Spacebar') {
-         		    answer_and_next();
-         		  } else if (e.key === 13 || e.key === 'Enter') {
-         		  	$("#answer").hide();
-         		    genNewTask();
-         		  }
-         		})
-         
-         		$('#right_div').on('click',function() {
-         			answer_and_next();
-                 });
-         
-                 $('.settings').on('click',function() {
-         			$("#task_box").hide();
-         			$("#settings_box").show();
-                 });
-         
-                 $('#save_digits').on('click',function() {
-         			digits = $('.digits').val()
-         			localStorage.setItem("digits", digits);
-         			$('#msg').html('<div id="saved"><h1>Saved</h1></div>');
-         			$("#msg").show();
-         			setTimeout(function() { 
-         		        $("#msg").hide('slow');
-         		    }, 500);
-                 });
-         
-             });
-      </script>
-      <div id="msg"></div>
-   </body>
+                        $("#task_box").show();
+                    }
+                    correct_answers_count = 0;
+                    $("#goal_css").html("");
+                    $("#progress").html("");
+                    genNewTask();
+                });
+
+                function answer_and_next() {
+                    if (position == 1) {
+                        position = 2;
+                        $("#answer").show();
+                    } else {
+                        position = 1;
+                        $("#answer").hide();
+                        genNewTask();
+                    }
+                }
+
+                $(window).keypress(function (e) {
+                    if (e.key === "Enter" && position == 2) {
+                        correct_answers();
+                        $("#answer").hide();
+                        answer_and_next();
+                    } else if (e.key === " " || e.key === "Spacebar") {
+                        answer_and_next();
+                    } else if (e.key === 13) {
+                        $("#answer").hide();
+                        genNewTask();
+                    }
+                });
+
+                $("#right_div").on("click", function () {
+                    answer_and_next();
+                });
+
+                $(".settings").on("click", function () {
+                    $("#task_box").hide();
+                    $("#settings_box").show();
+                });
+
+                $("#settings_save").on("click", function () {
+                    digits = $(".digits").val();
+                    localStorage.setItem("digits", digits);
+                    goal = $(".goal").val();
+                    localStorage.setItem("goal", goal);
+                    $("#msg").html('<div id="saved"><h1>Saved</h1></div>');
+                    $("#msg").show();
+                    setTimeout(function () {
+                        $("#msg").hide("slow");
+                    }, 500);
+                });
+
+                $("#answer_correct").on("click", function () {
+                    correct_answers();
+                });
+
+                function correct_answers() {
+                    correct_answers_count++;
+                    console.log(correct_answers_count, goal);
+                    if (correct_answers_count >= goal) {
+                        $("#goal_css").append("<style>#progress button{border-color:green;color:green;}</style>");
+                    }
+                    $("#progress").append("<button>" + correct_answers_count + "</button>");
+                }
+            });
+        </script>
+        <div id="msg"></div>
+    </body>
 </html>

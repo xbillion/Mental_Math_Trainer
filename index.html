@@ -11,6 +11,13 @@
                 font-family: Andale Mono, Liberation Mono, Tahoma;
             }
 
+            #hint {
+                margin-top: 20px;
+                text-align: center;
+                color: #99b2bf;
+                font-size: 0.9em;
+            }
+
             #menu {
                 margin: 20px 0 15px 0;
             }
@@ -51,7 +58,7 @@
             /* style the items (options), including the selected item: */
             .select-items div,
             .select-selected {
-                color: #ccc;
+                color: #b0bdc5;
                 padding: 8px 16px;
                 border: 1px solid transparent;
                 border-color: transparent transparent #3e5868 transparent;
@@ -76,12 +83,6 @@
             .select-items div:hover,
             .same-as-selected {
                 background-color: #304550;
-            }
-
-            #hint {
-                text-align: center;
-                color: #888;
-                font-size: 0.9em;
             }
 
             #settings_box {
@@ -152,7 +153,7 @@
                 display: none;
                 margin: 0 auto;
                 padding: 22px 30px 16px 30px;
-                border: 1px solid #6e777c;
+                border: 1px solid #62727c;
                 border-radius: 5px;
                 width: 200px;
             }
@@ -169,7 +170,7 @@
                 cursor: pointer;
                 border: 0;
                 font-size: 0.6em;
-                background: #989ea2;
+                background: #62727c;
                 padding: 6px 16px;
                 font-size: 1.2em;
                 margin: 0 0 15px 0;
@@ -197,6 +198,8 @@
     <body>
         <div id="goal_css"></div>
 
+        <div id="hint">Space/Click: answer. Enter: +1 correct</div>
+
         <div id="menu">
             <div class="custom-select">
                 <select>
@@ -213,8 +216,6 @@
                 </select>
             </div>
         </div>
-
-        <div id="hint">Space/Click: answer. Enter: +1 correct</div>
 
         <div id="task_box">
             <h1 id="task"></h1>

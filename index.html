@@ -12,21 +12,72 @@
             }
 
             #menu {
-                text-align: center;
                 margin: 20px 0 15px 0;
             }
-            #menu a {
-                color: #bbb;
+
+            /* The container must be positioned relative: */
+            .custom-select {
+                position: relative;
+                margin: 0 auto;
+                width: 220px;
+            }
+
+            .custom-select select {
+                display: none; /*hide original SELECT element: */
+            }
+
+            .select-selected {
+                background-color: #364751;
+            }
+
+            /* Style the arrow inside the select element: */
+            .select-selected:after {
+                position: absolute;
+                content: "";
+                top: 14px;
+                right: 10px;
+                width: 0;
+                height: 0;
+                border: 6px solid transparent;
+                border-color: #eee transparent transparent transparent;
+            }
+
+            /* Point the arrow upwards when the select box is open (active): */
+            .select-selected.select-arrow-active:after {
+                border-color: transparent transparent #eee transparent;
+                top: 7px;
+            }
+
+            /* style the items (options), including the selected item: */
+            .select-items div,
+            .select-selected {
+                color: #ccc;
+                padding: 8px 16px;
+                border: 1px solid transparent;
+                border-color: transparent transparent #3e5868 transparent;
                 cursor: pointer;
-                margin: 0 2px;
-                font-size: 0.9em;
-                border-bottom: 0px;
             }
-            #menu a:hover {
-                opacity: 0.8;
-                color: #bbb;
-                border-bottom: 1px solid #555;
+
+            /* Style items (options): */
+            .select-items {
+                position: absolute;
+                background-color: #31434e;
+                top: 100%;
+                left: 0;
+                right: 0;
+                z-index: 99;
             }
+
+            /* Hide the items when the select box is closed: */
+            .select-hide {
+                display: none;
+            }
+
+            .select-items div:hover,
+            .same-as-selected {
+                background-color: #304550;
+            }
+
             #hint {
                 text-align: center;
                 color: #888;
@@ -147,12 +198,20 @@
         <div id="goal_css"></div>
 
         <div id="menu">
-            <a class="link_mode" data-mode="r">Random</a>
-            <a class="link_mode" data-mode="d">Division</a>
-            <a class="link_mode" data-mode="m">Multiplication</a>
-            <a class="link_mode" data-mode="a">Addition</a>
-            <a class="link_mode" data-mode="s">Subtraction</a>
-            <a class="link_settings">Settings</a>
+            <div class="custom-select">
+                <select>
+                    <option>Menu</option>
+                    <option value="multiplication">Multiplication</option>
+                    <option value="square_roots">Square Roots</option>
+                    <option value="powers_of_2">Powers of 2</option>
+                    <option value="powers_random">Powers Random</option>
+                    <option value="division">Division</option>
+                    <option value="addition">Addition</option>
+                    <option value="subtraction">Subtraction</option>
+                    <option value="Random">Random</option>
+                    <option value="settings">Settings</option>
+                </select>
+            </div>
         </div>
 
         <div id="hint">Space/Click: answer. Enter: +1 correct</div>
@@ -177,6 +236,14 @@
                     <td><input type="text" class="digits" /></td>
                 </tr>
                 <tr>
+                    <td>Square Root Min:</td>
+                    <td><input type="text" class="square_root_min" /></td>
+                </tr>
+                <tr>
+                    <td>Square Root Max:</td>
+                    <td><input type="text" class="square_root_max" /></td>
+                </tr>
+                <tr>
                     <td>Goal:</td>
                     <td><input type="text" class="goal" /></td>
                 </tr>
@@ -195,7 +262,8 @@
                     return Math.floor(Math.random() * (max - min + 1)) + min;
                 }
                 var position = 1;
-                var mode = "m";
+                var mode = "Multiplication";
+
                 var local_s_digits = localStorage.getItem("digits");
                 if (local_s_digits == null) {
                     var digits = 2;
@@ -214,22 +282,47 @@
 
                 $(".goal").val(goal);
 
+                var local_s_square_root_min = localStorage.getItem("square_root_min");
+                if (local_s_square_root_min == null) {
+                    var square_root_min = 11;
+                } else {
+                    var square_root_min = local_s_square_root_min;
+                }
+
+                $(".square_root_min").val(square_root_min);
+
+                var local_s_square_root_max = localStorage.getItem("square_root_max");
+                if (local_s_square_root_max == null) {
+                    var square_root_max = 21;
+                } else {
+                    var square_root_max = local_s_square_root_max;
+                }
+
+                $(".square_root_max").val(square_root_max);
+
                 let correct_answers_count = 0;
 
                 function genNewTask() {
-                    var n1 = getRandomInt(parseInt("1" + "0".repeat(digits - 1)), parseInt("9".repeat(digits)));
-                    var n2 = getRandomInt(parseInt("1" + "0".repeat(digits - 1)), parseInt("9".repeat(digits)));
-                    var answer = 0;
-                    if (mode == "r") {
-                        var action = getRandomInt(1, 4);
-                    } else if (mode == "d") {
+                    let n1 = getRandomInt(parseInt("1" + "0".repeat(digits - 1)), parseInt("9".repeat(digits)));
+                    let n2 = getRandomInt(parseInt("1" + "0".repeat(digits - 1)), parseInt("9".repeat(digits)));
+                    let power_rand = getRandomInt(3, 10);
+                    let answer = 0;
+                    if (mode == "Random") {
+                        var action = getRandomInt(1, 7);
+                    } else if (mode == "Division") {
                         var action = 1;
-                    } else if (mode == "m") {
+                    } else if (mode == "Multiplication") {
                         var action = 2;
-                    } else if (mode == "a") {
+                    } else if (mode == "Addition") {
                         var action = 3;
-                    } else if (mode == "s") {
+                    } else if (mode == "Subtraction") {
                         var action = 4;
+                    } else if (mode == "Powers of 2") {
+                        var action = 5;
+                    } else if (mode == "Powers Random") {
+                        var action = 6;
+                    } else if (mode == "Square Roots") {
+                        var action = 7;
                     }
 
                     if (action == 1) {
@@ -244,26 +337,29 @@
                     } else if (action == 4) {
                         action = "&#8722;";
                         answer = n1 - n2;
+                    } else if (action == 5) {
+                        answer = 2 ** power_rand;
+                    } else if (action == 6) {
+                        answer = n1 ** 2;
+                    } else if (action == 7) {
+                        let square_root_original_number = getRandomInt(square_root_min, square_root_max);
+                        n1 = square_root_original_number ** 2;
+                        answer = square_root_original_number;
                     }
-                    $("#task").html(n1 + " " + action + " " + n2);
+
+                    if (action == 5) {
+                        $("#task").html("2<sup>" + power_rand + "</sup>");
+                    } else if (action == 6) {
+                        $("#task").html(n1 + "<sup>2</sup>");
+                    } else if (action == 7) {
+                        $("#task").html("&#8730;" + n1);
+                    } else {
+                        $("#task").html(n1 + " " + action + " " + n2);
+                    }
                     $("#answer_text").text(answer);
                 }
 
                 genNewTask();
-
-                $("#menu").on("click", ".link_mode", function () {
-                    mode = $(this).data("mode");
-                    if (mode != undefined) {
-                        position = 1;
-                        $("#settings_box").hide();
-                        $("#answer").hide();
-                        $("#task_box").show();
-                    }
-                    correct_answers_count = 0;
-                    $("#goal_css").html("");
-                    $("#progress").html("");
-                    genNewTask();
-                });
 
                 function answer_and_next() {
                     if (position == 1) {
@@ -293,16 +389,15 @@
                     answer_and_next();
                 });
 
-                $(".link_settings").on("click", function () {
-                    $("#task_box").hide();
-                    $("#settings_box").show();
-                });
-
                 $("#settings_save").on("click", function () {
                     digits = $(".digits").val();
                     localStorage.setItem("digits", digits);
                     goal = $(".goal").val();
                     localStorage.setItem("goal", goal);
+                    square_root_min = $(".square_root_min").val();
+                    localStorage.setItem("square_root_min", square_root_min);
+                    square_root_max = $(".square_root_max").val();
+                    localStorage.setItem("square_root_max", square_root_max);
                     $("#msg").html('<div id="saved"><h1>Saved</h1></div>');
                     $("#msg").show();
                     setTimeout(function () {
@@ -321,6 +416,109 @@
                     }
                     $("#progress").append("<button>" + correct_answers_count + "</button>");
                 }
+
+                var x, i, j, l, ll, selElmnt, a, b, c;
+                /* Look for any elements with the class "custom-select": */
+                x = document.getElementsByClassName("custom-select");
+                l = x.length;
+                for (i = 0; i < l; i++) {
+                    selElmnt = x[i].getElementsByTagName("select")[0];
+                    ll = selElmnt.length;
+                    /* For each element, create a new DIV that will act as the selected item: */
+                    a = document.createElement("DIV");
+                    a.setAttribute("class", "select-selected");
+                    a.innerHTML = selElmnt.options[selElmnt.selectedIndex].innerHTML;
+                    x[i].appendChild(a);
+                    /* For each element, create a new DIV that will contain the option list: */
+                    b = document.createElement("DIV");
+                    b.setAttribute("class", "select-items select-hide");
+                    for (j = 1; j < ll; j++) {
+                        /* For each option in the original select element,
+    create a new DIV that will act as an option item: */
+                        c = document.createElement("DIV");
+                        c.innerHTML = selElmnt.options[j].innerHTML;
+                        c.addEventListener("click", function (e) {
+                            /* When an item is clicked, update the original select box,
+        and the selected item: */
+                            var y, i, k, s, h, sl, yl;
+                            s = this.parentNode.parentNode.getElementsByTagName("select")[0];
+                            sl = s.length;
+                            h = this.parentNode.previousSibling;
+
+                            mode = this.innerText;
+
+                            if (mode == "Settings") {
+                                $("#task_box").hide();
+                                $("#settings_box").show();
+                            } else {
+                                position = 1;
+                                $("#settings_box").hide();
+                                $("#answer").hide();
+                                $("#task_box").show();
+                                correct_answers_count = 0;
+                                $("#goal_css").html("");
+                                $("#progress").html("");
+                                genNewTask();
+                            }
+
+                            for (i = 0; i < sl; i++) {
+                                if (s.options[i].innerHTML == this.innerHTML) {
+                                    s.selectedIndex = i;
+                                    h.innerHTML = this.innerHTML;
+                                    y = this.parentNode.getElementsByClassName("same-as-selected");
+                                    yl = y.length;
+                                    for (k = 0; k < yl; k++) {
+                                        y[k].removeAttribute("class");
+                                    }
+                                    this.setAttribute("class", "same-as-selected");
+                                    break;
+                                }
+                            }
+                            h.click();
+                        });
+                        b.appendChild(c);
+                    }
+                    x[i].appendChild(b);
+                    a.addEventListener("click", function (e) {
+                        /* When the select box is clicked, close any other select boxes,
+    and open/close the current select box: */
+                        e.stopPropagation();
+                        closeAllSelect(this);
+                        this.nextSibling.classList.toggle("select-hide");
+                        this.classList.toggle("select-arrow-active");
+                    });
+                }
+
+                function closeAllSelect(elmnt) {
+                    /* A function that will close all select boxes in the document,
+  except the current select box: */
+                    var x,
+                        y,
+                        i,
+                        xl,
+                        yl,
+                        arrNo = [];
+                    x = document.getElementsByClassName("select-items");
+                    y = document.getElementsByClassName("select-selected");
+                    xl = x.length;
+                    yl = y.length;
+                    for (i = 0; i < yl; i++) {
+                        if (elmnt == y[i]) {
+                            arrNo.push(i);
+                        } else {
+                            y[i].classList.remove("select-arrow-active");
+                        }
+                    }
+                    for (i = 0; i < xl; i++) {
+                        if (arrNo.indexOf(i)) {
+                            x[i].classList.add("select-hide");
+                        }
+                    }
+                }
+
+                /* If the user clicks anywhere outside the select box,
+then close all select boxes: */
+                document.addEventListener("click", closeAllSelect);
             });
         </script>
         <div id="msg"></div>

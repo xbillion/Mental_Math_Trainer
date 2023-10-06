@@ -90,12 +90,25 @@
                 margin: 0 auto;
                 padding-top: 30px;
                 width: 300px;
-            }
-            #settings_box h1 {
                 color: #d6d8da;
             }
             #settings_box td {
                 padding: 5px 10px;
+                color: #eaecec;
+            }
+            table {
+                border-collapse: collapse;
+            }
+            #statistics_box {
+                display: none;
+                margin: 0 auto;
+                padding-top: 30px;
+                width: 500px;
+                color: #d6d8da;
+            }
+            #statistics_box td {
+                border: 1px solid #62727c;
+                padding: 5px 20px 5px 20px;
                 color: #eaecec;
             }
             #settings_box input {
@@ -127,15 +140,12 @@
                 overflow: hidden;
                 position: fixed;
                 overflow: hidden;
-                background: #455057;
+                background: #435058;
             }
             #saved h1 {
                 text-align: center;
-                margin: 0;
-                position: absolute;
+                padding-top: 200px;
                 color: #989ea2;
-                top: 20%;
-                left: 45%;
             }
 
             #task_box {
@@ -192,6 +202,11 @@
                 width: 35px;
                 height: 22px;
             }
+            #progress_time {
+                text-align: center;
+                margin: 15px 0;
+                color: #d6d8da;
+            }
         </style>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     </head>
@@ -204,15 +219,16 @@
             <div class="custom-select">
                 <select>
                     <option>Menu</option>
-                    <option value="multiplication">Multiplication</option>
-                    <option value="square_roots">Square Roots</option>
-                    <option value="powers_of_2">Powers of 2</option>
-                    <option value="powers_random">Powers Random</option>
-                    <option value="division">Division</option>
-                    <option value="addition">Addition</option>
-                    <option value="subtraction">Subtraction</option>
-                    <option value="Random">Random</option>
-                    <option value="settings">Settings</option>
+                    <option>Multiplication</option>
+                    <option>Square Roots</option>
+                    <option>Powers of 2</option>
+                    <option>Powers Random</option>
+                    <option>Division</option>
+                    <option>Addition</option>
+                    <option>Subtraction</option>
+                    <option>Random</option>
+                    <option>Statistics</option>
+                    <option>Settings</option>
                 </select>
             </div>
         </div>
@@ -227,6 +243,8 @@
             </div>
 
             <div id="progress"></div>
+            <div id="progress_time"></div>
+
         </div>
 
         <div id="settings_box">
@@ -255,6 +273,14 @@
             </table>
         </div>
 
+        <div id="statistics_box">
+            <h1>Statistics</h1>
+            <table id="statistics_table">
+
+            </table>
+            <span id="statistics_msg"></span>
+        </div>
+
         <script>
             $(document).ready(function () {
                 function getRandomInt(min, max) {
@@ -262,6 +288,7 @@
                     max = Math.floor(max);
                     return Math.floor(Math.random() * (max - min + 1)) + min;
                 }
+                let timeStart = Math.floor(Date.now() / 1000);
                 var position = 1;
                 var mode = "Multiplication";
 
@@ -412,7 +439,24 @@
 
                 function correct_answers() {
                     correct_answers_count++;
-                    if (correct_answers_count >= goal) {
+                    if (correct_answers_count == goal) {
+                        let timeGoalFinish = Math.floor(Date.now() / 1000);
+                        let timeDelta = timeGoalFinish - timeStart;
+                        let min = Math.floor(timeDelta / 60);
+                        let sec = timeDelta - (min * 60);
+                        let add_record = {}
+                        let record_array = [parseInt(goal), timeDelta];
+                        add_record[timeGoalFinish] = record_array;
+                        // localStorage.removeItem("statistics");
+                        if (localStorage.hasOwnProperty('statistics')) {
+                            let loadStatistics = JSON.parse(localStorage.getItem("statistics"))
+                            loadStatistics[timeGoalFinish] = record_array
+                            localStorage.setItem("statistics", JSON.stringify(loadStatistics));
+                        } else {
+                            localStorage.setItem("statistics", JSON.stringify(add_record));
+                        }
+                        console.log(JSON.parse(localStorage.getItem("statistics")))
+                        $("#progress_time").text(min + ' min ' + sec + ' sec');
                         $("#goal_css").append("<style>#progress button{border-color:green;}</style>");
                     }
                     $("#progress").append("<button>" + correct_answers_count + "</button>");
@@ -450,10 +494,38 @@
 
                             if (mode == "Settings") {
                                 $("#task_box").hide();
+                                $("#statistics_box").hide();
                                 $("#settings_box").show();
+                            } else if (mode == "Statistics") {
+                                $("#task_box").hide();
+                                $("#settings_box").hide();
+                                $("#statistics_box").show();
+
+
+                                if (localStorage.hasOwnProperty('statistics')) {
+                                    let loadStatistics = JSON.parse(localStorage.getItem("statistics"))
+                                    let table = ''
+                                    function timeConverter(unix_timestamp){
+                                      var a = new Date(unix_timestamp * 1000);
+                                      var time = a.getFullYear() + '-' + ('0' + (a.getMonth()+1)).slice(-2) + '-' + ('0' + a.getDate()).slice(-2);
+                                      return time;
+                                    }
+                                    for (i in loadStatistics) {
+                                        let timeDelta = loadStatistics[i][1];
+                                        let min = Math.floor(timeDelta / 60);
+                                        let sec = timeDelta - (min * 60);
+                                        table += '<tr><td>' + timeConverter(i) + '</td><td>' + loadStatistics[i][0] + '</td><td>' + min + ' min ' + sec + ' sec</td></tr>'
+                                    }
+                                    $('#statistics_table').html(table)
+                                } else {
+                                    $('#statistics_msg').text('No records')
+                                }
+
+
                             } else {
                                 position = 1;
                                 $("#settings_box").hide();
+                                $("#statistics_box").hide();
                                 $("#answer").hide();
                                 $("#task_box").show();
                                 correct_answers_count = 0;

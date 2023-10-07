@@ -103,7 +103,7 @@
                 display: none;
                 margin: 0 auto;
                 padding-top: 30px;
-                width: 500px;
+                width: 600px;
                 color: #d6d8da;
             }
             #statistics_box td {
@@ -445,7 +445,7 @@
                         let min = Math.floor(timeDelta / 60);
                         let sec = timeDelta - (min * 60);
                         let add_record = {}
-                        let record_array = [parseInt(goal), timeDelta];
+                        let record_array = [mode, parseInt(goal), timeDelta];
                         add_record[timeGoalFinish] = record_array;
                         // localStorage.removeItem("statistics");
                         if (localStorage.hasOwnProperty('statistics')) {
@@ -511,10 +511,10 @@
                                       return time;
                                     }
                                     for (i in loadStatistics) {
-                                        let timeDelta = loadStatistics[i][1];
+                                        let timeDelta = loadStatistics[i][2];
                                         let min = Math.floor(timeDelta / 60);
                                         let sec = timeDelta - (min * 60);
-                                        table += '<tr><td>' + timeConverter(i) + '</td><td>' + loadStatistics[i][0] + '</td><td>' + min + ' min ' + sec + ' sec</td></tr>'
+                                        table += '<tr><td>' + timeConverter(i) + '</td><td>' + loadStatistics[i][0] + '</td><td>' + loadStatistics[i][1] + '</td><td>' + min + ' min ' + sec + ' sec</td></tr>'
                                     }
                                     $('#statistics_table').html(table)
                                 } else {

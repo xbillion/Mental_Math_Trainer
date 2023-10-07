@@ -275,6 +275,11 @@
 
         <div id="statistics_box">
             <h1>Statistics</h1>
+
+            <button id="exportBtn">Export</button> / 
+            <input type="file" id="importFile" accept=".txt">
+            <button id="importBtn">Import</button><br><br>
+
             <table id="statistics_table">
 
             </table>
@@ -592,6 +597,58 @@
                 /* If the user clicks anywhere outside the select box,
 then close all select boxes: */
                 document.addEventListener("click", closeAllSelect);
+
+
+
+// Функция для загрузки данных как файл .txt
+function download(filename, text) {
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', filename);
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
+}
+
+document.getElementById('exportBtn').addEventListener('click', function() {
+    let statisticsData = localStorage.getItem('statistics');
+    if (statisticsData) {
+        let currentDate = new Date();
+        let formattedDate = `mental_math_${currentDate.getFullYear()}_${currentDate.getMonth() + 1}_${currentDate.getDate()}.txt`;
+        download(formattedDate, statisticsData);
+    } else {
+        alert('No data found in localStorage!');
+    }
+});
+
+document.getElementById('importBtn').addEventListener('click', function() {
+    const fileInput = document.getElementById('importFile');
+    const file = fileInput.files[0];
+
+    if (!file) {
+        alert('Please select a file before importing.');
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(event) {
+        try {
+            const data = event.target.result;
+            localStorage.setItem('statistics', data);
+            alert('Data successfully imported!');
+        } catch (e) {
+            alert('Error importing data: ' + e.message);
+        }
+    };
+
+    reader.readAsText(file);
+});
+
+
             });
         </script>
         <div id="msg"></div>
